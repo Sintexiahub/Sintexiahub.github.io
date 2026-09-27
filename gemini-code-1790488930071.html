@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SINTEX | AI & Global Horizon - Executive Intelligence Platform</title>
+
+    <!-- Google Fonts: Space Grotesk (Headings), Urbanist (Body/UI), Fira Code (Telemetry/Data) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=Urbanist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#05070f',
+                            card: 'rgba(13, 18, 36, 0.75)',
+                            cyan: '#06b6d4',
+                            violet: '#8b5cf6',
+                            emerald: '#10b981',
+                            amber: '#f59e0b',
+                            border: 'rgba(255, 255, 255, 0.08)',
+                        }
+                    },
+                    fontFamily: {
+                        display: ['Space Grotesk', 'sans-serif'],
+                        sans: ['Urbanist', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #05070f;
+            color: #e2e8f0;
+            font-family: 'Urbanist', sans-serif;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(6, 182, 212, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(139, 92, 246, 0.05) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        .glass-panel {
+            background: rgba(13, 18, 36, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .ticker-wrap {
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .ticker-move {
+            display: inline-block;
+            animation: ticker 35s linear infinite;
+        }
+
+        @keyframes ticker {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-50%, 0, 0); }
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(5, 7, 15, 0.5);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(6, 182, 212, 0.5);
+        }
+
+        .neon-glow-cyan {
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between antialiased selection:bg-cyan-500 selection:text-black">
+
+    <!-- TOP LIVE STREAMING TICKER HEADER -->
+    <header class="sticky top-0 z-50 glass-panel border-b border-brand-border">
+        <div class="bg-black/60 py-1.5 px-4 text-xs font-mono border-b border-brand-border flex items-center justify-between">
+            <div class="flex items-center space-x-2 shrink-0">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                <span class="text-emerald-400 font-bold tracking-wider">LIVE TELEMETRY STREAM</span>
+            </div>
+            <div class="ticker-wrap mx-6 text-gray-400">
+                <div id="ticker-content" class="ticker-move space-x-6">
+                    <!-- Dynamic Ticker Elements Injected via JS -->
+                </div>
+            </div>
+            <div class="shrink-0 text-gray-400 hidden md:block">
+                <span>US/LATAM CLOUD NODES: <span class="text-cyan-400">ONLINE</span></span>
+            </div>
+        </div>
+
+        <!-- MAIN NAVBAR -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchMainPage('page-1')">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-violet-600 flex items-center justify-center text-white font-display font-bold text-xl shadow-lg shadow-cyan-500/20">
+                    S
+                </div>
+                <div>
+                    <h1 class="font-display font-bold text-xl tracking-tight text-white flex items-center gap-2">
+                        SINTEX <span class="text-xs px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 font-mono">v4.8 LIVE</span>
+                    </h1>
+                    <p class="text-xs text-gray-400">Global AI Horizon & US-LATAM Strategic Intelligence</p>
+                </div>
+            </div>
+
+            <!-- Main Page Nav Tabs -->
+            <nav class="hidden lg:flex items-center space-x-1 bg-black/40 p-1.5 rounded-xl border border-brand-border">
+                <button onclick="switchMainPage('page-1')" id="nav-btn-page-1" class="main-nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-white bg-cyan-500/20 border border-cyan-500/40">
+                    <i class="fa-solid fa-earth-americas mr-2 text-cyan-400"></i>Global Horizon & LATAM
+                </button>
+                <button onclick="switchMainPage('page-2')" id="nav-btn-page-2" class="main-nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-gray-400 hover:text-white hover:bg-white/5">
+                    <i class="fa-solid fa-chart-line mr-2 text-violet-400"></i>Markets & Big Tech
+                </button>
+                <button onclick="switchMainPage('page-3')" id="nav-btn-page-3" class="main-nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-gray-400 hover:text-white hover:bg-white/5">
+                    <i class="fa-solid fa-briefcase mr-2 text-emerald-400"></i>Workforce & Sectors
+                </button>
+                <button onclick="switchMainPage('page-4')" id="nav-btn-page-4" class="main-nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-gray-400 hover:text-white hover:bg-white/5">
+                    <i class="fa-solid fa-shield-halved mr-2 text-amber-400"></i>Fact-Checking & Audit
+                </button>
+                <button onclick="switchMainPage('page-5')" id="nav-btn-page-5" class="main-nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-gray-400 hover:text-white hover:bg-white/5">
+                    <i class="fa-solid fa-compass mr-2 text-rose-400"></i>Assessment & Roadmap
+                </button>
+            </nav>
+
+            <div class="flex items-center space-x-3">
+                <button onclick="triggerSimulatedLiveNews()" class="px-3.5 py-2 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono hover:bg-emerald-500/20 transition">
+                    <i class="fa-solid fa-rotate mr-1.5 animate-spin"></i>Simulate Live Feed
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER WITH RIGHT-HAND VERTICAL SIDEBAR -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+            <!-- LEFT/CENTER MAIN CONTENT DISPLAY (lg:col-span-9) -->
+            <div class="lg:col-span-9 space-y-6">
+                
+                <!-- LIVE REAL-TIME TELEMETRY SYSTEM BANNER -->
+                <div class="glass-panel p-4 rounded-2xl border border-cyan-500/20 bg-gradient-to-r from-cyan-950/20 via-black to-violet-950/20">
+                    <div class="flex flex-wrap items-center justify-between gap-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-2.5 bg-cyan-500/10 rounded-xl border border-cyan-500/30 text-cyan-400">
+                                <i class="fa-solid fa-microchip text-xl"></i>
+                            </div>
+                            <div>
+                                <div class="text-xs font-mono text-cyan-400 font-bold uppercase tracking-wider flex items-center gap-2">
+                                    <span>[LIVE SYSTEM MONITOR]</span>
+                                    <span class="inline-block w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
+                                </div>
+                                <h2 id="active-module-title" class="font-display font-bold text-lg text-white">Global AI Adoption & Infrastructure Load</h2>
+                            </div>
+                        </div>
+
+                        <!-- LIVE METRICS GRID -->
+                        <div class="flex items-center space-x-6 font-mono text-xs">
+                            <div class="text-right">
+                                <p class="text-gray-400">LATENCY (US-EAST)</p>
+                                <p id="telemetry-latency" class="text-emerald-400 font-bold">13.8 ms</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-gray-400">COMPUTE LOAD</p>
+                                <p id="telemetry-load" class="text-cyan-400 font-bold">89.1 GW</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-gray-400">INFERENCE SPEED</p>
+                                <p id="telemetry-tokens" class="text-violet-400 font-bold">512 tok/s</p>
+                            </div>
+                            <div class="text-right hidden sm:block">
+                                <p class="text-gray-400">SPOT H100 PRICE</p>
+                                <p id="telemetry-price" class="text-amber-400 font-bold">$2.81 / hr</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DYNAMIC CONTENT CONTAINERS -->
+                <div id="main-content-display">
+                    
+                    <!-- PAGE 1: GLOBAL HORIZON & LATAM -->
+                    <div id="page-1" class="page-container space-y-6">
+                        
+                        <!-- SUB-MODULE 1.1 -->
+                        <div id="sub-1-1" class="sub-module-content space-y-6">
+                            <div class="glass-panel p-6 rounded-2xl">
+                                <span class="px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 text-xs font-mono">Module 1.1 - Macro Strategic Horizon</span>
+                                <h3 class="font-display font-bold text-2xl text-white mt-3 mb-4">Global AI Ecosystem Expansion & Macro Trends 2026</h3>
+                                <p class="text-gray-300 leading-relaxed text-base mb-6">
+                                    The global Artificial Intelligence landscape in 2026 has transitioned from speculative experimentation into full-scale industrial deployment. Aggregate annual capital expenditure (CapEx) in specialized data centers, GPU clusters, and custom ASICs has crossed <strong class="text-white font-semibold">$1.85 Trillion</strong> globally.
+                                </p>
+
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                                    <div class="p-4 rounded-xl bg-black/40 border border-brand-border">
+                                        <p class="text-xs text-gray-400 font-mono">GLOBAL AI CAPEX (2026)</p>
+                                        <p class="font-display font-bold text-2xl text-cyan-400 mt-1">$1.85 Trillion</p>
+                                        <p class="text-xs text-emerald-400 mt-1"><i class="fa-solid fa-arrow-trend-up mr-1"></i>+34% YoY Growth</p>
+                                    </div>
+                                    <div class="p-4 rounded-xl bg-black/40 border border-brand-border">
+                                        <p class="text-xs text-gray-400 font-mono">FRONTIER PARAMETERS</p>
+                                        <p class="font-display font-bold text-2xl text-violet-400 mt-1">12.8 Trillion</p>
+                                        <p class="text-xs text-gray-400 mt-1">MoE Architectures</p>
+                                    </div>
+                                    <div class="p-4 rounded-xl bg-black/40 border border-brand-border">
+                                        <p class="text-xs text-gray-400 font-mono">ENTERPRISE ADOPTION</p>
+                                        <p class="font-display font-bold text-2xl text-emerald-400 mt-1">74.2%</p>
+                                        <p class="text-xs text-gray-400 mt-1">Fortune 500 Production</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SUB-MODULE 1.2 -->
+                        <div id="sub-1-2" class="sub-module-content hidden space-y-6">
+                            <div class="glass-panel p-6 rounded-2xl">
+                                <span class="px-3 py-1 rounded-full bg-violet-500/10 text-violet-400 border border-violet-500/30 text-xs font-mono">Module 1.2 - Regional Infrastructure Hubs</span>
+                                <h3 class="font-display font-bold text-2xl text-white mt-3 mb-4">LATAM Infrastructure Corridors: Queretaro, São Paulo, Santiago & Bogotá</h3>
+                                <p class="text-gray-300 leading-relaxed text-base mb-6">
+                                    Latin America has emerged as a crucial operational node for global hyperscalers seeking renewable energy, nearshoring proximity to North America, and growing domestic enterprise demand.
+                                </p>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                                    <div class="p-4 rounded-xl bg-black/40 border border-brand-border">
+                                        <h4 class="font-display font-bold text-cyan-400 mb-2"><i class="fa-solid fa-server mr-2"></i>Querétaro (Mexico)</h4>
+                                        <p class="text-xs text-gray-300 mb-2">Over $8.2B invested in cloud availability zones. Serves as the key data bridge between US Sunbelt and Central America.</p>
+                                        <span class="text-xs font-mono text-emerald-400">420 MW Operational / Solar</span>
+                                    </div>
+                                    <div class="p-4 rounded-xl bg-black/40 border border-brand-border">
+                                        <h4 class="font-display font-bold text-violet-400 mb-2"><i class="fa-solid fa-bolt mr-2"></i>São Paulo (Brazil)</h4>
+                                        <p class="text-xs text-gray-300 mb-2">Largest data center cluster in South America. Hosting major AI training facilities utilizing hydro and wind energy.</p>
+                                        <span class="text-xs font-mono text-emerald-400">780 MW / 89% Renewable</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- PAGE 2: MARKETS & BIG TECH -->
+                    <div id="page-2" class="page-container hidden space-y-6">
+                        <div class="glass-panel p-6 rounded-2xl">
+                            <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+                                <div>
+                                    <span class="px-3 py-1 rounded-full bg-violet-500/10 text-violet-400 border border-violet-500/30 text-xs font-mono">Page 2 - Financial Intelligence</span>
+                                    <h3 class="font-display font-bold text-2xl text-white mt-2">Big Tech AI CapEx & Equity Analytics</h3>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <button onclick="updateChartTimeframe('1M')" class="px-3 py-1 rounded bg-black/40 border border-brand-border text-xs font-mono text-gray-300 hover:text-white">1M</button>
+                                    <button onclick="updateChartTimeframe('6M')" class="px-3 py-1 rounded bg-black/40 border border-brand-border text-xs font-mono text-gray-300 hover:text-white">6M</button>
+                                    <button onclick="updateChartTimeframe('1Y')" class="px-3 py-1 rounded bg-cyan-500/20 border border-cyan-500/40 text-xs font-mono text-cyan-400">1Y</button>
+                                    <button onclick="toggleChartAutoTick()" id="chart-autotick-btn" class="px-3 py-1 rounded bg-emerald-500/20 border border-emerald-500/40 text-xs font-mono text-emerald-400 flex items-center gap-1">
+                                        <i class="fa-solid fa-play text-[10px]"></i> Live Auto-Tick
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="h-72 w-full mb-6">
+                                <canvas id="marketChart"></canvas>
+                            </div>
+
+                            <!-- CAPEX VS ROI SIMULATOR -->
+                            <div class="p-5 rounded-xl bg-black/40 border border-brand-border space-y-4">
+                                <h4 class="font-display font-bold text-lg text-white flex items-center gap-2">
+                                    <i class="fa-solid fa-calculator text-cyan-400"></i> Data Center CapEx vs. ROI Financial Simulator
+                                </h4>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div>
+                                        <label class="text-xs text-gray-400 font-mono block mb-1">GPU Cluster Count</label>
+                                        <input type="range" id="sim-gpus" min="1000" max="100000" step="1000" value="16000" class="w-full accent-cyan-400" oninput="updateCapExSim()">
+                                        <p class="text-right text-xs font-mono text-cyan-400 mt-1"><span id="val-gpus">16,000</span> Units</p>
+                                    </div>
+                                    <div>
+                                        <label class="text-xs text-gray-400 font-mono block mb-1">Power Cost ($/kWh)</label>
+                                        <input type="range" id="sim-power" min="0.03" max="0.15" step="0.01" value="0.06" class="w-full accent-violet-400" oninput="updateCapExSim()">
+                                        <p class="text-right text-xs font-mono text-violet-400 mt-1">$<span id="val-power">0.06</span> / kWh</p>
+                                    </div>
+                                    <div>
+                                        <label class="text-xs text-gray-400 font-mono block mb-1">Inference Monetization Rate ($/M Tokens)</label>
+                                        <input type="range" id="sim-rate" min="0.10" max="5.00" step="0.10" value="1.20" class="w-full accent-emerald-400" oninput="updateCapExSim()">
+                                        <p class="text-right text-xs font-mono text-emerald-400 mt-1">$<span id="val-rate">1.20</span> / M Tok</p>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-3 border-t border-brand-border">
+                                    <div>
+                                        <p class="text-xs text-gray-400 font-mono">ESTIMATED HARDWARE CAPEX</p>
+                                        <p id="res-capex" class="font-display font-bold text-xl text-white">$480.0M</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-gray-400 font-mono">ANNUAL POWER OPEX</p>
+                                        <p id="res-opex" class="font-display font-bold text-xl text-amber-400">$21.0M</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-gray-400 font-mono">ESTIMATED ANNUAL PAYBACK (ROI)</p>
+                                        <p id="res-payback" class="font-display font-bold text-xl text-emerald-400">1.8 Years</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PAGE 3, 4, 5 CONTAINERS -->
+                    <div id="page-3" class="page-container hidden space-y-6">
+                        <div class="glass-panel p-6 rounded-2xl">
+                            <span class="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs font-mono">Page 3 - Sector Radar</span>
+                            <h3 class="font-display font-bold text-2xl text-white mt-2 mb-4">Workforce Transition Radar</h3>
+                            <p class="text-gray-300 text-sm">Evaluation of task vulnerability vs. AI augmentation capacity across Economic sectors.</p>
+                        </div>
+                    </div>
+
+                    <div id="page-4" class="page-container hidden space-y-6">
+                        <div class="glass-panel p-6 rounded-2xl">
+                            <span class="px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30 text-xs font-mono">Page 4 - Audit</span>
+                            <h3 class="font-display font-bold text-2xl text-white mt-2 mb-4">Empirical Fact-Checking & Audits</h3>
+                            <p class="text-gray-300 text-sm">Scientific analysis of AGI claims, hallucination rates, and carbon footprint.</p>
+                        </div>
+                    </div>
+
+                    <div id="page-5" class="page-container hidden space-y-6">
+                        <div class="glass-panel p-6 rounded-2xl">
+                            <span class="px-3 py-1 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/30 text-xs font-mono">Page 5 - Assessment</span>
+                            <h3 class="font-display font-bold text-2xl text-white mt-2 mb-4">Professional Adaptability Diagnostic</h3>
+                            <button onclick="calculateQuizScore()" class="py-2.5 px-5 rounded-xl bg-gradient-to-r from-cyan-500 to-violet-600 font-bold text-white text-xs">Run Assessment</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- RIGHT-HAND VERTICAL SUB-MODULE NAVIGATION SIDEBAR -->
+            <aside class="lg:col-span-3 space-y-4">
+                
+                <div class="sticky top-28 glass-panel p-4 rounded-2xl border border-brand-border space-y-4">
+                    
+                    <div class="flex items-center justify-between pb-3 border-b border-brand-border">
+                        <h3 class="font-display font-bold text-sm text-white flex items-center gap-2">
+                            <i class="fa-solid fa-layer-group text-cyan-400"></i>
+                            <span id="sidebar-category-title">Page Modules</span>
+                        </h3>
+                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">10 SUB-TABS</span>
+                    </div>
+
+                    <!-- VERTICAL SUB-TAB NAVIGATION CONTAINER -->
+                    <div id="vertical-subtabs-list" class="space-y-1.5 custom-scrollbar max-h-[calc(100vh-220px)] overflow-y-auto pr-1">
+                        <!-- Dynamically Injected via JS based on Active Page -->
+                    </div>
+
+                    <!-- LIVE NEWS STREAM PANEL -->
+                    <div class="pt-4 border-t border-brand-border space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-mono text-emerald-400 font-bold flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span> BREAKING FEED
+                            </span>
+                        </div>
+                        
+                        <div id="live-news-stream" class="space-y-2 text-xs font-sans max-h-48 overflow-y-auto custom-scrollbar">
+                            <div class="p-2.5 rounded-lg bg-black/40 border border-brand-border space-y-1">
+                                <p class="text-gray-300 font-medium">[01:00] NVLink-10 interconnect cluster deployed in Queretaro Hub.</p>
+                                <span class="text-[10px] font-mono text-cyan-400">Market Impact: High</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </aside>
+
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="glass-panel border-t border-brand-border mt-12 py-8 text-xs font-mono text-gray-400">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p>© 2026 SINTEX Platform | Global AI Horizon & Strategic Intelligence</p>
+            <div class="flex items-center space-x-4">
+                <span class="hover:text-cyan-400 cursor-pointer">Security Protocol</span>
+                <span class="hover:text-cyan-400 cursor-pointer">API Telemetry</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT SYSTEM LOGIC -->
+    <script>
+        const moduleMap = {
+            'page-1': {
+                title: 'Global Horizon & LATAM',
+                subs: [
+                    { id: 'sub-1-1', name: 'Global Ecosystem 2026', icon: 'fa-earth-americas' },
+                    { id: 'sub-1-2', name: 'LATAM Infrastructure Hubs', icon: 'fa-server' },
+                    { id: 'sub-1-3', name: 'Employment & Cognition', icon: 'fa-brain' },
+                    { id: 'sub-1-4', name: 'Biotech & AlphaFold 3', icon: 'fa-dna' },
+                    { id: 'sub-1-5', name: 'Energy & Data Centers', icon: 'fa-bolt' },
+                    { id: 'sub-1-6', name: 'Synthetic Media & Art', icon: 'fa-wand-magic-sparkles' },
+                    { id: 'sub-1-7', name: 'Cyber Defense & Security', icon: 'fa-shield-halved' },
+                    { id: 'sub-1-8', name: 'Software Architecture', icon: 'fa-code' },
+                    { id: 'sub-1-9', name: 'Chips & Semiconductor Geopolitics', icon: 'fa-microchip' },
+                    { id: 'sub-1-10', name: 'LATAM Governance & Policy', icon: 'fa-scale-balanced' }
+                ]
+            },
+            'page-2': {
+                title: 'Markets & Big Tech',
+                subs: [
+                    { id: 'sub-2-1', name: 'NVIDIA (NVDA)', icon: 'fa-chart-line' },
+                    { id: 'sub-2-2', name: 'Microsoft (MSFT)', icon: 'fa-window-maximize' },
+                    { id: 'sub-2-3', name: 'Alphabet / Google (GOOGL)', icon: 'fa-magnifying-glass' },
+                    { id: 'sub-2-4', name: 'Amazon Web Services (AMZN)', icon: 'fa-cloud' },
+                    { id: 'sub-2-5', name: 'Meta Platforms (META)', icon: 'fa-users' },
+                    { id: 'sub-2-6', name: 'Apple Inc. (AAPL)', icon: 'fa-mobile-screen' },
+                    { id: 'sub-2-7', name: 'Broadcom (AVGO)', icon: 'fa-network-wired' },
+                    { id: 'sub-2-8', name: 'TSMC Foundry (TSM)', icon: 'fa-building-columns' },
+                    { id: 'sub-2-9', name: 'Oracle Cloud (ORCL)', icon: 'fa-database' },
+                    { id: 'sub-2-10', name: 'CapEx vs ROI Simulator', icon: 'fa-calculator' }
+                ]
+            },
+            'page-3': {
+                title: 'Workforce & Sectors',
+                subs: [
+                    { id: 'sub-3-1', name: 'Software Engineering', icon: 'fa-laptop-code' },
+                    { id: 'sub-3-2', name: 'Media & Design', icon: 'fa-palette' },
+                    { id: 'sub-3-3', name: 'Healthcare & Pharma', icon: 'fa-stethoscope' },
+                    { id: 'sub-3-4', name: 'Financial Services', icon: 'fa-sack-dollar' },
+                    { id: 'sub-3-5', name: 'Education & Academics', icon: 'fa-graduation-cap' },
+                    { id: 'sub-3-6', name: 'Legal Sector', icon: 'fa-gavel' },
+                    { id: 'sub-3-7', name: 'Logistics & Supply Chain', icon: 'fa-truck-fast' },
+                    { id: 'sub-3-8', name: 'Industrial Manufacturing', icon: 'fa-industry' },
+                    { id: 'sub-3-9', name: 'Energy & Utilities', icon: 'fa-plug' },
+                    { id: 'sub-3-10', name: 'LATAM BPO & Nearshoring', icon: 'fa-headset' }
+                ]
+            },
+            'page-4': {
+                title: 'Fact-Checking & Audit',
+                subs: [
+                    { id: 'sub-4-1', name: 'AGI vs Statistical Models', icon: 'fa-circle-question' },
+                    { id: 'sub-4-2', name: 'Job Displacement Reality', icon: 'fa-user-slash' },
+                    { id: 'sub-4-3', name: 'Hallucination Benchmarks', icon: 'fa-bug' },
+                    { id: 'sub-4-4', name: 'Environmental Impact', icon: 'fa-leaf' },
+                    { id: 'sub-4-5', name: 'Data Privacy & Rights', icon: 'fa-lock' },
+                    { id: 'sub-4-6', name: 'Creativity & Intentionality', icon: 'fa-pen-nib' },
+                    { id: 'sub-4-7', name: 'Open Source vs Closed', icon: 'fa-folder-open' },
+                    { id: 'sub-4-8', name: 'Linguistic Bias (Spanish LLMs)', icon: 'fa-language' },
+                    { id: 'sub-4-9', name: 'US vs EU Regulatory Audit', icon: 'fa-file-contract' },
+                    { id: 'sub-4-10', name: 'Uncertainty Matrix', icon: 'fa-chart-pie' }
+                ]
+            },
+            'page-5': {
+                title: 'Assessment & Roadmap',
+                subs: [
+                    { id: 'sub-5-1', name: 'Self Diagnostic Quiz', icon: 'fa-list-check' },
+                    { id: 'sub-5-2', name: 'Profile Report', icon: 'fa-id-card' },
+                    { id: 'sub-5-3', name: 'AI Literacy Baseline', icon: 'fa-book-open' },
+                    { id: 'sub-5-4', name: 'Critical Verification', icon: 'fa-check-double' },
+                    { id: 'sub-5-5', name: 'Technical Specialization', icon: 'fa-gear' },
+                    { id: 'sub-5-6', name: 'Reskilling Pathways', icon: 'fa-route' },
+                    { id: 'sub-5-7', name: 'Ethics & Privacy Guide', icon: 'fa-user-shield' },
+                    { id: 'sub-5-8', name: 'Executive Leadership', icon: 'fa-user-tie' },
+                    { id: 'sub-5-9', name: '2026-2030 Tactical Roadmap', icon: 'fa-timeline' },
+                    { id: 'sub-5-10', name: 'Academic Resource Repository', icon: 'fa-vault' }
+                ]
+            }
+        };
+
+        let activePage = 'page-1';
+        let activeSubModule = 'sub-1-1';
+        let chartInstance = null;
+        let isChartAutoTick = true;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initTicker();
+            renderRightSidebarNav('page-1');
+            initMarketChart();
+            startTelemetryGenerator();
+            updateCapExSim();
+        });
+
+        function switchMainPage(pageId) {
+            activePage = pageId;
+            document.querySelectorAll('.page-container').forEach(el => el.classList.add('hidden'));
+            const pageEl = document.getElementById(pageId);
+            if(pageEl) pageEl.classList.remove('hidden');
+
+            document.querySelectorAll('.main-nav-btn').forEach(btn => {
+                btn.className = 'main-nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-gray-400 hover:text-white hover:bg-white/5';
+            });
+            const activeBtn = document.getElementById(`nav-btn-${pageId}`);
+            if(activeBtn) {
+                activeBtn.className = 'main-nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-white bg-cyan-500/20 border border-cyan-500/40';
+            }
+
+            renderRightSidebarNav(pageId);
+            if(moduleMap[pageId] && moduleMap[pageId].subs.length > 0) {
+                switchSubModule(moduleMap[pageId].subs[0].id);
+            }
+        }
+
+        function renderRightSidebarNav(pageId) {
+            const container = document.getElementById('vertical-subtabs-list');
+            const titleEl = document.getElementById('sidebar-category-title');
+            if(!container) return;
+
+            const pageData = moduleMap[pageId];
+            if(titleEl) titleEl.innerText = pageData ? pageData.title : 'Sub-Modules';
+            container.innerHTML = '';
+
+            if(pageData && pageData.subs) {
+                pageData.subs.forEach(sub => {
+                    const btn = document.createElement('button');
+                    btn.id = `sidebar-btn-${sub.id}`;
+                    btn.onclick = () => switchSubModule(sub.id);
+                    btn.className = `w-full text-left px-3 py-2.5 rounded-xl font-sans text-xs font-semibold flex items-center justify-between transition-all duration-200 border ${
+                        sub.id === activeSubModule 
+                        ? 'bg-cyan-500/20 border-cyan-500/50 text-white neon-glow-cyan' 
+                        : 'bg-black/30 border-brand-border text-gray-400 hover:text-white hover:bg-white/5'
+                    }`;
+
+                    btn.innerHTML = `
+                        <div class="flex items-center space-x-2.5 overflow-hidden">
+                            <i class="fa-solid ${sub.icon} text-sm ${sub.id === activeSubModule ? 'text-cyan-400' : 'text-gray-500'} shrink-0 w-4 text-center"></i>
+                            <span class="truncate">${sub.name}</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-[10px] text-gray-600 shrink-0"></i>
+                    `;
+                    container.appendChild(btn);
+                });
+            }
+        }
+
+        function switchSubModule(subId) {
+            activeSubModule = subId;
+            document.querySelectorAll('.sub-module-content').forEach(el => el.classList.add('hidden'));
+
+            const subEl = document.getElementById(subId);
+            if(subEl) subEl.classList.remove('hidden');
+
+            const pageData = moduleMap[activePage];
+            if(pageData) {
+                pageData.subs.forEach(s => {
+                    const btn = document.getElementById(`sidebar-btn-${s.id}`);
+                    if(btn) {
+                        btn.className = s.id === subId 
+                        ? 'w-full text-left px-3 py-2.5 rounded-xl font-sans text-xs font-semibold flex items-center justify-between transition-all duration-200 border bg-cyan-500/20 border-cyan-500/50 text-white neon-glow-cyan'
+                        : 'w-full text-left px-3 py-2.5 rounded-xl font-sans text-xs font-semibold flex items-center justify-between transition-all duration-200 border bg-black/30 border-brand-border text-gray-400 hover:text-white hover:bg-white/5';
+                    }
+                });
+
+                const foundSub = pageData.subs.find(s => s.id === subId);
+                const titleBanner = document.getElementById('active-module-title');
+                if(foundSub && titleBanner) {
+                    titleBanner.innerText = `${pageData.title} - ${foundSub.name}`;
+                }
+            }
+        }
+
+        function initTicker() {
+            const tickerEl = document.getElementById('ticker-content');
+            if(!tickerEl) return;
+            const items = [
+                { s: 'NVDA', p: 143.65, c: '+0.60%' },
+                { s: 'MSFT', p: 448.20, c: '+1.20%' },
+                { s: 'GOOGL', p: 182.50, c: '+2.10%' },
+                { s: 'AMZN', p: 194.10, c: '+0.80%' },
+                { s: 'SPOT H100', p: '$2.81/hr', c: '-1.05%' }
+            ];
+            let html = '';
+            items.forEach(i => {
+                html += `<span class="inline-flex items-center space-x-2"><span class="font-bold text-white">${i.s}</span><span class="text-gray-300">${i.p}</span><span class="text-emerald-400">${i.c}</span></span>`;
+            });
+            tickerEl.innerHTML = html + html;
+        }
+
+        function initMarketChart() {
+            const ctx = document.getElementById('marketChart');
+            if(!ctx) return;
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+                    datasets: [{
+                        label: 'NVDA AI Infrastructure Index',
+                        data: [110, 118, 125, 122, 135, 140, 138, 145, 152],
+                        borderColor: '#06b6d4',
+                        backgroundColor: 'rgba(6, 182, 212, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { labels: { color: '#e2e8f0' } } },
+                    scales: {
+                        x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                        y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+                    }
+                }
+            });
+        }
+
+        function startTelemetryGenerator() {
+            setInterval(() => {
+                const lat = (12 + Math.random() * 3).toFixed(1);
+                const latEl = document.getElementById('telemetry-latency');
+                if(latEl) latEl.innerText = `${lat} ms`;
+
+                const load = (88 + Math.random() * 3).toFixed(1);
+                const loadEl = document.getElementById('telemetry-load');
+                if(loadEl) loadEl.innerText = `${load} GW`;
+
+                const tok = Math.floor(480 + Math.random() * 50);
+                const tokEl = document.getElementById('telemetry-tokens');
+                if(tokEl) tokEl.innerText = `${tok} tok/s`;
+            }, 3000);
+        }
+
+        function updateCapExSim() {
+            const gpus = parseInt(document.getElementById('sim-gpus').value);
+            const power = parseFloat(document.getElementById('sim-power').value);
+            const rate = parseFloat(document.getElementById('sim-rate').value);
+
+            document.getElementById('val-gpus').innerText = gpus.toLocaleString();
+            document.getElementById('val-power').innerText = power.toFixed(2);
+            document.getElementById('val-rate').innerText = rate.toFixed(2);
+
+            const capexM = (gpus * 30000) / 1000000;
+            const mw = (gpus * 0.7) / 1000;
+            const opexM = (mw * 1000 * power * 8760) / 1000000;
+            const annualRevM = (gpus * rate * 1800); 
+            const payback = (capexM / Math.max(1, (annualRevM - opexM))).toFixed(1);
+
+            document.getElementById('res-capex').innerText = `$${capexM.toFixed(1)}M`;
+            document.getElementById('res-opex').innerText = `$${opexM.toFixed(1)}M`;
+            document.getElementById('res-payback').innerText = `${payback} Years`;
+        }
+
+        function triggerSimulatedLiveNews() {
+            const feed = document.getElementById('live-news-stream');
+            if(!feed) return;
+            const newItem = document.createElement('div');
+            newItem.className = 'p-2.5 rounded-lg bg-cyan-950/40 border border-cyan-500/40 space-y-1';
+            newItem.innerHTML = `<p class="text-white font-medium">[01:01] Live Telemetry tick sync completed across US-East & LATAM Nodes.</p><span class="text-[10px] font-mono text-cyan-400">STATUS OK</span>`;
+            feed.prepend(newItem);
+        }
+
+        function toggleChartAutoTick() { isChartAutoTick = !isChartAutoTick; }
+        function updateChartTimeframe(tf) { }
+        function calculateQuizScore() { alert('Diagnostic generated successfully!'); }
+    </script>
+</body>
+</html>
